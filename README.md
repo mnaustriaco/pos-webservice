@@ -1,5 +1,5 @@
 # pos-webservice
-Experimental POS webservice using MEAN Stack
+POS Webservice : MongoDB, Express, Node.js  part of the POS System
 
 Guide : 
 
@@ -13,3 +13,8 @@ Deployment :
 * run <b>npm run tsc</b> to convert typescripts to javascript files.
 * run <b>npm run dev</b> for running the dev mode which reflects changes upon save of files.
 * run <b>npm run prod</b> for running the app to deployment. 
+
+Future Development : 
+
+* use MongooseDB for retrieval of data to mongoDB
+* add app tests (as always)

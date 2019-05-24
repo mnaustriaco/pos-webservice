@@ -1,17 +1,6 @@
 import { IController } from "../_interfaces/IController";
 import * as express from 'express';
 
-// import { Request, Response, Router } from 'express';
-
-// const userController: Router = Router();
-
-// userController.get('/persons', (req:Request, res:Response) => {
-//     //dummy data. format same 
-    // res.json();
-// });
-
-// export const UserController:Router = userController;
-
 export class UserController implements IController {
     path: string = '/users';  
     router: express.Router = express.Router();
@@ -19,7 +8,7 @@ export class UserController implements IController {
     constructor(){
         this.initRoutes();
     }
-    initRoutes(){
+    initRoutes(): void{
         this.router.get(this.path, this.getAllUsers);
         
     }
@@ -29,11 +18,11 @@ export class UserController implements IController {
         res.send([{
             "user":"mario",
             "password":"sekyu",
-            "access":"User"
+            "access":"user"
         },{
             "user":"nino",
             "password":"kyusei",
-            "access":"Admin"
+            "access":"admin"
         }]);
     }
 

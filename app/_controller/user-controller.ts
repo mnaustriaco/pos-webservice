@@ -1,17 +1,6 @@
 import { IController } from "../_interfaces/IController";
 import * as express from 'express';
 
-// import { Request, Response, Router } from 'express';
-
-// const userController: Router = Router();
-
-// userController.get('/persons', (req:Request, res:Response) => {
-//     //dummy data. format same 
-    // res.json();
-// });
-
-// export const UserController:Router = userController;
-
 export class UserController implements IController {
     path: string = '/users';  
     router: express.Router = express.Router();

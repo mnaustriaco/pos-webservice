@@ -24,11 +24,11 @@ var UserController = /** @class */ (function () {
             res.send([{
                     "user": "mario",
                     "password": "sekyu",
-                    "access": "User"
+                    "access": "user"
                 }, {
                     "user": "nino",
                     "password": "kyusei",
-                    "access": "Admin"
+                    "access": "admin"
                 }]);
         };
         this.initRoutes();

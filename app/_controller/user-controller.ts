@@ -29,11 +29,11 @@ export class UserController implements IController {
         res.send([{
             "user":"mario",
             "password":"sekyu",
-            "access":"User"
+            "access":"user"
         },{
             "user":"nino",
             "password":"kyusei",
-            "access":"Admin"
+            "access":"admin"
         }]);
     }
 

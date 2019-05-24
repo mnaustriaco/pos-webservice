@@ -19,7 +19,7 @@ export class UserController implements IController {
     constructor(){
         this.initRoutes();
     }
-    initRoutes(){
+    initRoutes(): void{
         this.router.get(this.path, this.getAllUsers);
         
     }

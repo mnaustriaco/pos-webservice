@@ -16,17 +16,17 @@ var ProductController = /** @class */ (function () {
         this.getAllProducts = function (req, res) {
             res.json([{
                     "pid": "12345678",
-                    "item_name": "GTX 1060",
-                    "part_number": "02",
+                    "itemName": "GTX 1060",
+                    "partNumber": "02",
                     "category": "GPU",
                     "description": "A video card with 4 GB Capability",
-                    "supplier_price": 1000.00,
-                    "wholesale_price": 1100.00,
-                    "retail_price": 1200.00,
-                    "current_qty": 15,
-                    "stock_qty": 30,
-                    "supplier_id": "Nvidia",
-                    "product_image": "gtx.jpg"
+                    "supplierPrice": 1000.00,
+                    "wholesalePrice": 1100.00,
+                    "retailPrice": 1200.00,
+                    "currentQty": 15,
+                    "stockQty": 30,
+                    "supplierId": "Nvidia",
+                    "productImg": "gtx.jpg"
                 }]);
         };
         this.initRoutes();

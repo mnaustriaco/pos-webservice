@@ -2,8 +2,12 @@ import { IController } from "../_interfaces/IController";
 import * as express from 'express';
 
 export class SupplierController implements IController {
-    path: string = '/supplier';    
+    path: string = '/suppliers';    
     router: express.Router = express.Router();
+    
+    constructor(){
+        this.initRoutes();
+    }
 
     initRoutes(): void {
         this.router.get(this.path, this.getAllSuppliers) ;

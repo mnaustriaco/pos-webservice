@@ -8,13 +8,6 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = __importStar(require("express"));
-// import { Request, Response, Router } from 'express';
-// const userController: Router = Router();
-// userController.get('/persons', (req:Request, res:Response) => {
-//     //dummy data. format same 
-// res.json();
-// });
-// export const UserController:Router = userController;
 var UserController = /** @class */ (function () {
     function UserController() {
         this.path = '/users';

@@ -18,18 +18,38 @@ var UserController = /** @class */ (function () {
         this.router = express.Router();
         this.getUser = function (req, res) {
             if (req.params.username) {
-                var username = req.params.username;
+                // let id:string = req.params.id;
+                var name_1 = {}; //dirty ol' javascript (cwl)
+                name_1['userId'] = req.params.username;
                 user_model_1.default
-                    .findById(username)
+                    .find(name_1)
                     .then(function (user) {
-                    res.send(user);
+                    res.json(user);
                 }, function (onrejected) {
                     console.log('rejected' + onrejected);
-                    res.status(500).send('server unable to handle response');
+                    res.status(500).send('server unable to handle request');
                 });
             }
             else {
                 res.status(400).send('invalid username');
+            }
+        };
+        // get user id first by calling getUser.
+        this.modifyUser = function (req, res) {
+            if (req.body) {
+                var id = req.params.id;
+                var updatedUser = req.body;
+                user_model_1.default
+                    .findByIdAndUpdate(id, updatedUser, { new: true })
+                    .then(function (user) {
+                    res.json(user);
+                }, function (onrejected) {
+                    console.log('rejected ' + onrejected);
+                    res.status(500).send('server unable to handle request');
+                });
+            }
+            else {
+                res.status(400).send('invalid data');
             }
         };
         //functions
@@ -45,16 +65,39 @@ var UserController = /** @class */ (function () {
             // res.json({});
             var createdUser = new user_model_1.default(userData);
             console.log(createdUser);
-            createdUser.save().then(function (savedUser) {
+            createdUser
+                .save()
+                .then(function (savedUser) {
                 res.json(savedUser);
+            }, function (onrejected) {
+                console.log(onrejected);
+                res.status(500).send('server error. user probably exists');
+            });
+        };
+        this.deleteUser = function (req, res) {
+            var id = req.params.id;
+            user_model_1.default
+                .findByIdAndDelete(id)
+                .then(function (success) {
+                if (success) {
+                    res.status(200).send('user deleted successfully');
+                }
+                else {
+                    res.status(500).send('user not deleted');
+                }
+            }, function (onrejected) {
+                console.log(onrejected);
+                res.status(500).send('server rejected request.');
             });
         };
         this.initRoutes();
     }
     UserController.prototype.initRoutes = function () {
         this.router.get(this.path, this.getAllUsers);
-        this.router.post(this.path, this.addUser);
         this.router.get(this.path + "/:username", this.getUser);
+        this.router.post(this.path, this.addUser);
+        this.router.patch(this.path + "/:id", this.modifyUser);
+        this.router.delete(this.path + "/:id", this.deleteUser);
     };
     return UserController;
 }());

@@ -5,9 +5,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // kung di gumana. :))
 var mongoose_1 = require("mongoose");
 var userSchema = new mongoose_1.Schema({
-    userId: String,
-    password: String,
-    accType: String
+    userId: { type: String, unique: true, required: true },
+    password: { type: String, required: true },
+    accType: { type: String, required: true }
 });
 var userModel = mongoose_1.model('User', userSchema);
 exports.default = userModel;

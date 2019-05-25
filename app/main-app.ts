@@ -1,7 +1,16 @@
 import express = require("express");
 import { IController } from "./_interfaces/IController";
-
+import mongoose = require( 'mongoose');
+require('dotenv').config();
 // import * as express from 'express';
+
+const {
+    MONGO_USER,
+    MONGO_PASSWORD,
+    MONGO_DB,
+    MONGO_PATH,
+    MONGO_PORT
+} = process.env;
 
 class MainApp {
     public mainApp: express.Application;
@@ -10,12 +19,32 @@ class MainApp {
     constructor(controllers:IController[], port:number){
         this.mainApp = express();
         this.port = port;
-
+        this.connectToDb();
         this.initMiddlewares(); 
         this.initControllers(controllers);       
 
+
     }
-   
+
+    public listen(){
+        this.mainApp.listen(this.port, () => {
+            console.log(`Now listenning to port :  ${this.port}`);
+        });
+    }
+    private connectToDb(){
+        console.log('connecting to Database...');
+        let connStr = `${MONGO_PATH}:${MONGO_PORT}/${MONGO_DB}`;
+        console.log(connStr);
+        // mongoose.connect(`mongodb://localhost:27017/pos_db`, {useNewUrlParser:true});
+        mongoose.connect(`mongodb://${connStr}`, {useNewUrlParser:true});
+        mongoose.connection.on('error', (error)=> {
+            console.log(`error occured \n ${error}`);
+        });
+        mongoose.connection.once('open', () => {
+                console.log('Is open mother fuckers..');
+        })
+    }
+
     private initMiddlewares(){
         this.mainApp.use(this.loggerMiddleware);
     }
@@ -25,16 +54,13 @@ class MainApp {
         });
 
     }
-    public listen(){
-        this.mainApp.listen(this.port, () => {
-            console.log(`Now listenning to port :  ${this.port}`);
-        });
-    }
 
     loggerMiddleware(request: express.Request, response: express.Response, next:express.NextFunction){
         console.log(`> ${request.method} + ${request.path}`)
         next();
     }
+
+
 }
 // idk wat dis.
 export default MainApp;

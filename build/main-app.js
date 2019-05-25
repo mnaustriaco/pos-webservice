@@ -4,7 +4,6 @@ var express = require("express");
 var mongoose = require("mongoose");
 require('dotenv').config();
 // import * as express from 'express';
-var _a = process.env, MONGO_USER = _a.MONGO_USER, MONGO_PASSWORD = _a.MONGO_PASSWORD, MONGO_DB = _a.MONGO_DB, MONGO_PATH = _a.MONGO_PATH, MONGO_PORT = _a.MONGO_PORT;
 var MainApp = /** @class */ (function () {
     function MainApp(controllers, port) {
         this.mainApp = express();
@@ -20,10 +19,9 @@ var MainApp = /** @class */ (function () {
         });
     };
     MainApp.prototype.connectToDb = function () {
+        var _a = process.env, MONGO_DB = _a.MONGO_DB, MONGO_PATH = _a.MONGO_PATH, MONGO_PORT = _a.MONGO_PORT;
         console.log('connecting to Database...');
         var connStr = MONGO_PATH + ":" + MONGO_PORT + "/" + MONGO_DB;
-        console.log(connStr);
-        // mongoose.connect(`mongodb://localhost:27017/pos_db`, {useNewUrlParser:true});
         mongoose.connect("mongodb://" + connStr, { useNewUrlParser: true });
         mongoose.connection.on('error', function (error) {
             console.log("error occured \n " + error);
@@ -33,6 +31,7 @@ var MainApp = /** @class */ (function () {
         });
     };
     MainApp.prototype.initMiddlewares = function () {
+        this.mainApp.use(express.json());
         this.mainApp.use(this.loggerMiddleware);
     };
     MainApp.prototype.initControllers = function (controllers) {

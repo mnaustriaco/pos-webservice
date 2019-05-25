@@ -4,13 +4,6 @@ import mongoose = require( 'mongoose');
 require('dotenv').config();
 // import * as express from 'express';
 
-const {
-    MONGO_USER,
-    MONGO_PASSWORD,
-    MONGO_DB,
-    MONGO_PATH,
-    MONGO_PORT
-} = process.env;
 
 class MainApp {
     public mainApp: express.Application;
@@ -32,11 +25,16 @@ class MainApp {
         });
     }
     private connectToDb(){
+        const {
+            MONGO_DB,
+            MONGO_PATH,
+            MONGO_PORT
+        } = process.env;
+
         console.log('connecting to Database...');
         let connStr = `${MONGO_PATH}:${MONGO_PORT}/${MONGO_DB}`;
-        console.log(connStr);
-        // mongoose.connect(`mongodb://localhost:27017/pos_db`, {useNewUrlParser:true});
         mongoose.connect(`mongodb://${connStr}`, {useNewUrlParser:true});
+
         mongoose.connection.on('error', (error)=> {
             console.log(`error occured \n ${error}`);
         });
@@ -46,6 +44,7 @@ class MainApp {
     }
 
     private initMiddlewares(){
+        this.mainApp.use(express.json());
         this.mainApp.use(this.loggerMiddleware);
     }
     private initControllers(controllers: IController[]){

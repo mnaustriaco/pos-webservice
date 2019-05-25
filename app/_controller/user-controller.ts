@@ -85,7 +85,7 @@ export class UserController implements IController {
             },
             (onrejected) => {
                 console.log(onrejected);
-                res.status(500).send('server error. user probably exists');
+                res.status(500).send('server error.');
             }
         );
     }

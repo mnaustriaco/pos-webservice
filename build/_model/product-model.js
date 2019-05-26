@@ -2,7 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var mongoose_1 = require("mongoose");
 var ProductSchema = new mongoose_1.Schema({
-    productId: { type: String, required: true, unique: true },
+    productId: { type: mongoose_1.SchemaTypes.String, required: true, unique: true },
     itemName: { type: String, required: true },
     partNumber: { type: Number, required: true },
     category: { type: String, required: true },
@@ -12,6 +12,7 @@ var ProductSchema = new mongoose_1.Schema({
     retailPrice: { type: Number, required: true },
     currentQty: { type: Number, required: true },
     stockQty: { type: Number, required: true },
+    supplierId: { type: String, required: true },
     productImg: { type: String, required: true }
 });
 var ProductModel = mongoose_1.model('Products', ProductSchema);

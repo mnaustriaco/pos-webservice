@@ -7,7 +7,8 @@ function validateEnv() {
         MONGO_PATH: envalid_1.str(),
         MONGO_USER: envalid_1.str(),
         MONGO_PORT: envalid_1.port(),
-        MONGO_DB: envalid_1.str()
+        MONGO_DB: envalid_1.str(),
+        OOS_MIN: envalid_1.num()
     });
 }
 exports.default = validateEnv;

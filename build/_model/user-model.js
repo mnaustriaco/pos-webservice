@@ -5,7 +5,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 // kung di gumana. :))
 var mongoose_1 = require("mongoose");
 var UserSchema = new mongoose_1.Schema({
-    userId: { type: String, unique: true, required: true },
+    userId: { type: mongoose_1.SchemaTypes.String, unique: true, required: true },
     password: { type: String, required: true },
     accType: { type: String, required: true }
 });

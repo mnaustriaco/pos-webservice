@@ -37,6 +37,7 @@ var MainApp = /** @class */ (function () {
     MainApp.prototype.initControllers = function (controllers) {
         var _this = this;
         controllers.forEach(function (controller) {
+            console.log('deploying controller :' + controller.path);
             _this.mainApp.use('/', controller.router);
         });
     };

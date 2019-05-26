@@ -19,4 +19,11 @@ export class TransactionController implements IController {
         }
     }
 
+    getTransactionsByDate =(req:express.Request, res:express.Response) => {
+
+    }
+    getAllTransactions = (req:express.Request, res:express.Response) => {
+
+    }
+
 }

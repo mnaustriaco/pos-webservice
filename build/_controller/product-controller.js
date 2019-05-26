@@ -6,28 +6,35 @@ var __importStar = (this && this.__importStar) || function (mod) {
     result["default"] = mod;
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 var express = __importStar(require("express"));
+var product_model_1 = __importDefault(require("../_model/product-model"));
 var ProductController = /** @class */ (function () {
     function ProductController() {
         this.path = '/products';
         this.router = express.Router();
+        this.getProduct = function (req, res) {
+        };
+        this.getOutOfStock = function (req, res) {
+        };
+        this.addProduct = function (req, res) {
+        };
+        this.modifyProduct = function (req, res) {
+        };
+        this.deleteProduct = function (req, res) {
+        };
         //all http method for products.
         this.getAllProducts = function (req, res) {
-            res.json([{
-                    "pid": "12345678",
-                    "itemName": "GTX 1060",
-                    "partNumber": "02",
-                    "category": "GPU",
-                    "description": "A video card with 4 GB Capability",
-                    "supplierPrice": 1000.00,
-                    "wholesalePrice": 1100.00,
-                    "retailPrice": 1200.00,
-                    "currentQty": 15,
-                    "stockQty": 30,
-                    "supplierId": "Nvidia",
-                    "productImg": "gtx.jpg"
-                }]);
+            try {
+                var allProducts = product_model_1.default.find();
+                res.send(allProducts);
+            }
+            catch (e) {
+                res.send("Server Error \n " + e);
+            }
         };
         this.initRoutes();
     }
@@ -37,9 +44,3 @@ var ProductController = /** @class */ (function () {
     return ProductController;
 }());
 exports.ProductController = ProductController;
-// const productController: Router = Router();
-// productController.get('/products', (req:Request, res:Response) => {
-//     //dummy data. format same 
-// res.json();
-// });
-// export const ProductController:Router = productController;

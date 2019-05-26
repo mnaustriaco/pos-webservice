@@ -1,6 +1,6 @@
 import { IController } from "../_interfaces/IController";
 import * as express from 'express';
-import userModel from '../_model/user-model';
+import UserModel from '../_model/user-model';
 import { IUser } from "../_interfaces/IUser";
 
 
@@ -25,7 +25,7 @@ export class UserController implements IController {
         let name: any = {}; 
         name['userId'] = req.params.username;
         try {
-            let user = await userModel.find(name);
+            let user = await UserModel.find(name);
             res.json(user);
         } catch (e) {
             res.status(500).send('server unable to handle request');
@@ -37,7 +37,7 @@ export class UserController implements IController {
         let id = req.params.id;
         let updatedUser = req.body;
         try {
-            let updateResult = await userModel.findByIdAndUpdate(id, updatedUser, {new: true});
+            let updateResult = await UserModel.findByIdAndUpdate(id, updatedUser, {new: true});
             res.json(updateResult);
         } catch (e) {
             res.status(500).send('server unable to handle request');
@@ -47,7 +47,7 @@ export class UserController implements IController {
     //functions
     getAllUsers = async (req: express.Request, res: express.Response) => {
         try {
-            let retrieved = await userModel.find();
+            let retrieved = await UserModel.find();
             res.json(retrieved);
         } catch (e ){
             res.status(500).send(`server error \n ${e}`);
@@ -56,7 +56,7 @@ export class UserController implements IController {
 
     addUser = async (req: express.Request, res: express.Response) => {
         let userData: IUser = req.body;
-        let createdUser = new userModel(userData);
+        let createdUser = new UserModel(userData);
         try {
             let createResult = await createdUser.save();
             res.json(createResult);
@@ -71,7 +71,7 @@ export class UserController implements IController {
 
         const id = req.params.id;
         try {
-            let deleteResult = await userModel.findByIdAndDelete(id);
+            let deleteResult = await UserModel.findByIdAndDelete(id);
             res.json(deleteResult);
         } catch (e ) {
             res.status(500).send('server rejected request.');

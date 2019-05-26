@@ -6,12 +6,12 @@
 import { model, Document, Schema} from 'mongoose';
 import { IUser } from '../_interfaces/IUser';
 
-const userSchema = new Schema({
+const UserSchema = new Schema({
     userId: {type: String, unique: true, required:true},
     password: {type:String, required: true},
     accType: {type:String, required: true}
 });
 
-const userModel = model<IUser & Document>('User', userSchema);
+const UserModel = model<IUser & Document>('User', UserSchema);
 
-export default userModel;
+export default UserModel;

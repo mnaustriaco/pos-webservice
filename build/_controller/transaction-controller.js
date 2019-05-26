@@ -60,6 +60,8 @@ var TransactionController = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         transaction = req.body;
+                        transaction.purchaseDate = new Date(transaction.purchaseDate);
+                        console.log(transaction.purchaseDate);
                         _a.label = 1;
                     case 1:
                         _a.trys.push([1, 4, , 5]);
@@ -80,10 +82,38 @@ var TransactionController = /** @class */ (function () {
                 }
             });
         }); };
-        this.getTransactionsByDate = function (req, res) {
-        };
+        this.getTransactionsByDate = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+            var from, to, transactions, filtered, e_2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        from = new Date(req.params.from);
+                        to = new Date(req.params.to);
+                        console.log(from + " - " + to);
+                        _a.label = 1;
+                    case 1:
+                        _a.trys.push([1, 3, , 4]);
+                        return [4 /*yield*/, transaction_model_1.default.find()];
+                    case 2:
+                        transactions = _a.sent();
+                        filtered = transactions.filter(function (transaction) {
+                            console.log('validating...');
+                            console.log(transaction.purchaseDate >= from);
+                            console.log(transaction.purchaseDate <= to);
+                            return transaction.purchaseDate >= from && transaction.purchaseDate <= to;
+                        });
+                        res.json(filtered);
+                        return [3 /*break*/, 4];
+                    case 3:
+                        e_2 = _a.sent();
+                        res.status(500).send('unable to process request');
+                        return [3 /*break*/, 4];
+                    case 4: return [2 /*return*/];
+                }
+            });
+        }); };
         this.getAllTransactions = function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-            var transactions, e_2;
+            var transactions, e_3;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -94,7 +124,7 @@ var TransactionController = /** @class */ (function () {
                         res.json(transactions);
                         return [3 /*break*/, 3];
                     case 2:
-                        e_2 = _a.sent();
+                        e_3 = _a.sent();
                         res.status(500).send('unable to process request');
                         return [3 /*break*/, 3];
                     case 3: return [2 /*return*/];
@@ -105,56 +135,59 @@ var TransactionController = /** @class */ (function () {
     }
     TransactionController.prototype.initRoutes = function () {
         this.router.get(this.path, this.getAllTransactions);
-        this.router.get(this.path + "/:from-:to", this.getTransactionsByDate);
+        this.router.get(this.path + "/:from.:to", this.getTransactionsByDate);
         this.router.post(this.path, this.uploadTransactions);
     };
     //private functions
     //refactor to.
     TransactionController.prototype.subtractInvoicesToProducts = function (invoices) {
         return __awaiter(this, void 0, void 0, function () {
-            var results_1;
-            var _this = this;
+            var results, _i, invoices_1, invoice, productQty, productFinder, retrieveProduct, retProdId, newQty, updatedQty, e_4;
             return __generator(this, function (_a) {
-                try {
-                    results_1 = [];
-                    invoices.forEach(function (invoice) { return __awaiter(_this, void 0, void 0, function () {
-                        var productQty, productFinder, retrieveProduct, retProdId, newQty, updatedQty;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    productQty = invoice.quantity;
-                                    productFinder = {};
-                                    productFinder['productId'] = invoice.productId;
-                                    return [4 /*yield*/, product_model_1.default.find(productFinder)];
-                                case 1:
-                                    retrieveProduct = _a.sent();
-                                    console.log(retrieveProduct);
-                                    if (!(retrieveProduct.length > 0)) return [3 /*break*/, 4];
-                                    retProdId = retrieveProduct[0].id;
-                                    newQty = {};
-                                    newQty['currentQty'] = retrieveProduct[0].currentQty - productQty;
-                                    console.log(retProdId + " : " + JSON.stringify(newQty));
-                                    return [4 /*yield*/, product_model_1.default.findByIdAndUpdate(retProdId, newQty, { new: true })];
-                                case 2:
-                                    updatedQty = _a.sent();
-                                    return [4 /*yield*/, results_1.push(updatedQty)];
-                                case 3:
-                                    _a.sent();
-                                    return [3 /*break*/, 6];
-                                case 4: return [4 /*yield*/, results_1.push({ "error": "no product exists" })];
-                                case 5:
-                                    _a.sent();
-                                    _a.label = 6;
-                                case 6: return [2 /*return*/];
-                            }
-                        });
-                    }); });
-                    console.log(results_1);
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 9, , 10]);
+                        results = [];
+                        _i = 0, invoices_1 = invoices;
+                        _a.label = 1;
+                    case 1:
+                        if (!(_i < invoices_1.length)) return [3 /*break*/, 8];
+                        invoice = invoices_1[_i];
+                        productQty = invoice.quantity;
+                        productFinder = {};
+                        productFinder['productId'] = invoice.productId;
+                        return [4 /*yield*/, product_model_1.default.find(productFinder)];
+                    case 2:
+                        retrieveProduct = _a.sent();
+                        console.log(retrieveProduct);
+                        if (!(retrieveProduct.length > 0)) return [3 /*break*/, 5];
+                        retProdId = retrieveProduct[0].id;
+                        newQty = {};
+                        newQty['currentQty'] = retrieveProduct[0].currentQty - productQty;
+                        console.log(retProdId + " : " + JSON.stringify(newQty));
+                        return [4 /*yield*/, product_model_1.default.findByIdAndUpdate(retProdId, newQty, { new: true })];
+                    case 3:
+                        updatedQty = _a.sent();
+                        return [4 /*yield*/, results.push(updatedQty)];
+                    case 4:
+                        _a.sent();
+                        return [3 /*break*/, 7];
+                    case 5: return [4 /*yield*/, results.push({ "error": "no product exists" })];
+                    case 6:
+                        _a.sent();
+                        _a.label = 7;
+                    case 7:
+                        _i++;
+                        return [3 /*break*/, 1];
+                    case 8:
+                        console.log(results);
+                        return [3 /*break*/, 10];
+                    case 9:
+                        e_4 = _a.sent();
+                        console.log('error ' + e_4);
+                        return [3 /*break*/, 10];
+                    case 10: return [2 /*return*/];
                 }
-                catch (e) {
-                    console.log('error ' + e);
-                }
-                return [2 /*return*/];
             });
         });
     };

@@ -17,14 +17,23 @@ export class TransactionController implements IController {
 
     initRoutes(): void {
         this.router.get(this.path, this.getAllTransactions);
-        this.router.get(`${this.path}/:from-:to`, this.getTransactionsByDate);
+        this.router.get(`${this.path}/:from.:to`, this.getTransactionsByDate);
         this.router.post(this.path, this.uploadTransactions);
+        //test lang to.
+        this.router.get(this.path+'/date', this.testGetDate);
+    }
+    
+    testGetDate = (req: express.Request, res: express.Response) =>{
+        res.json(new Date());
     }
 
     uploadTransactions = async (req: express.Request, res: express.Response) => {
         let transaction: ITransaction = req.body;
+        transaction.purchaseDate = new Date(transaction.purchaseDate);
+        console.log(transaction.purchaseDate);
         try {
            await this.subtractInvoicesToProducts(transaction.invoices);
+            
             let uploadTxn = new TransactionModel(transaction);
             let uploadResult = await uploadTxn.save();
             res.json(uploadResult);
@@ -34,7 +43,22 @@ export class TransactionController implements IController {
 
     }
 
-    getTransactionsByDate = (req: express.Request, res: express.Response) => {
+    getTransactionsByDate = async (req: express.Request, res: express.Response) => {
+        let from:Date = new Date(req.params.from);
+        let to: Date = new Date(req.params.to);
+        console.log(`${from} - ${to}`);
+        try {
+            let transactions = await TransactionModel.find();
+            let filtered = transactions.filter( transaction => {
+                console.log('validating...');
+                console.log(transaction.purchaseDate >= from);
+                console.log(transaction.purchaseDate <= to);
+                return transaction.purchaseDate >= from && transaction.purchaseDate <= to;
+            });
+            res.json(filtered);
+        } catch (e) {
+            res.status(500).send('unable to process request');
+        }
 
     }
     getAllTransactions = async (req: express.Request, res: express.Response) => {
@@ -50,8 +74,9 @@ export class TransactionController implements IController {
     private async subtractInvoicesToProducts(invoices: IInvoice[]) {
         try {
             let results: any = [];
-            invoices.forEach(async invoice => {
-                
+            //has to use ol' loop here cos it's safer.
+            // invoices.forEach(async invoice => {
+                for(let invoice of invoices){
                 // TODO here.
                 //get quantity.
                 let productQty = invoice.quantity;
@@ -73,7 +98,7 @@ export class TransactionController implements IController {
                 } else {
                     await results.push({ "error": "no product exists" });
                 }
-            });
+            }//);
             console.log( results);
         } catch (e) {
             console.log('error ' + e);

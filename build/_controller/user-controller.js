@@ -71,7 +71,7 @@ var UserController = /** @class */ (function () {
                 res.json(savedUser);
             }, function (onrejected) {
                 console.log(onrejected);
-                res.status(500).send('server error. user probably exists');
+                res.status(500).send('server error.');
             });
         };
         this.deleteUser = function (req, res) {

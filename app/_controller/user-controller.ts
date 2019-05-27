@@ -1,7 +1,10 @@
 import { IController } from "../_interfaces/IController";
 import * as express from 'express';
-import userModel from '../_model/user-model';
+import UserModel from '../_model/user-model';
 import { IUser } from "../_interfaces/IUser";
+
+
+// for future , refactor to async function.
 
 export class UserController implements IController {
     path: string = '/users';  
@@ -18,95 +21,61 @@ export class UserController implements IController {
         this.router.delete(`${this.path}/:id`, this.deleteUser);
     }
 
-    getUser = (req: express.Request, res: express.Response)=> {
-        if(req.params.username){
-            // let id:string = req.params.id;
-            let name: any = {}; //dirty ol' javascript (cwl)
-            name['userId'] = req.params.username;
-            userModel
-            .find(name)
-            .then(
-                user => {
-                    res.json(user);
-                },
-                (onrejected)=> {
-                    console.log('rejected' + onrejected);
-                    res.status(500).send('server unable to handle request');
-                }
-            )
-
-        } else {
-            res.status(400).send('invalid username');
+    getUser = async (req: express.Request, res: express.Response)=> {
+        let name: any = {}; 
+        name['userId'] = req.params.username;
+        try {
+            let user = await UserModel.find(name);
+            res.json(user);
+        } catch (e) {
+            res.status(500).send('server unable to handle request');
         }
-
     }
 
     // get user id first by calling getUser.
-    modifyUser = (req: express.Request, res: express.Response) => {
-        if(req.body){
-            let id = req.params.id;
-            let updatedUser = req.body;
-            userModel
-            .findByIdAndUpdate(id, updatedUser, {new:true})
-            .then(
-                user => {
-                    res.json(user);
-                },
-                (onrejected) => {
-                    console.log('rejected ' + onrejected);
-                    res.status(500).send('server unable to handle request');
-                }
-            )
-
-        } else {
-            res.status(400).send('invalid data');
+    modifyUser = async (req: express.Request, res: express.Response) => {
+        let id = req.params.id;
+        let updatedUser = req.body;
+        try {
+            let updateResult = await UserModel.findByIdAndUpdate(id, updatedUser, {new: true});
+            res.json(updateResult);
+        } catch (e) {
+            res.status(500).send('server unable to handle request');
         }
     }
 
     //functions
-    getAllUsers = (req: express.Request, res: express.Response) => {
-        userModel
-        .find()
-        .then(users => {
-            res.json(users);
-        });
+    getAllUsers = async (req: express.Request, res: express.Response) => {
+        try {
+            let retrieved = await UserModel.find();
+            res.json(retrieved);
+        } catch (e ){
+            res.status(500).send(`server error \n ${e}`);
+        }
     }
 
-    addUser = (req: express.Request, res: express.Response) => {
-        const userData: IUser = req.body;
-        // res.json({});
-        const createdUser = new userModel(userData);
-        console.log(createdUser);
-        createdUser
-        .save()
-        .then( 
-            savedUser => {
-                res.json(savedUser);
-            },
-            (onrejected) => {
-                console.log(onrejected);
-                res.status(500).send('server error. user probably exists');
-            }
-        );
+    addUser = async (req: express.Request, res: express.Response) => {
+        let userData: IUser = req.body;
+        let createdUser = new UserModel(userData);
+        try {
+            let createResult = await createdUser.save();
+            res.json(createResult);
+        } catch (e) {
+            res.status(500).send('server error');
+        }
     }
 
-    deleteUser = (req: express.Request, res: express.Response) => {
+    //refactor to na para username lang yung need ipasa.
+    deleteUser = async (req: express.Request, res: express.Response) => {
+        
+
         const id = req.params.id;
-        userModel
-        .findByIdAndDelete(id)
-        .then(
-            success => {
-                if(success){
-                    res.status(200).send('user deleted successfully');
-                } else {
-                    res.status(500).send('user not deleted');
-                }
-            },
-            (onrejected) => {
-                    console.log(onrejected);
-                    res.status(500).send('server rejected request.');
-            }
-        );
+        try {
+            let deleteResult = await UserModel.findByIdAndDelete(id);
+            res.json(deleteResult);
+        } catch (e ) {
+            res.status(500).send('server rejected request.');
+        }
     }
 
 }

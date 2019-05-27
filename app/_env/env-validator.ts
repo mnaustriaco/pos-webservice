@@ -1,4 +1,4 @@
-import { cleanEnv, str, port} from 'envalid';
+import { cleanEnv, str, port, num} from 'envalid';
 
 
 function validateEnv(){
@@ -7,7 +7,8 @@ function validateEnv(){
         MONGO_PATH: str(),
         MONGO_USER: str(),
         MONGO_PORT: port(),
-        MONGO_DB: str()
+        MONGO_DB: str(),
+        OOS_MIN: num()
     })
 }
 

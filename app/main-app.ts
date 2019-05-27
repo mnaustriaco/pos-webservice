@@ -49,6 +49,7 @@ class MainApp {
     }
     private initControllers(controllers: IController[]){
         controllers.forEach( (controller) => {
+            console.log('deploying controller :' + controller.path);
             this.mainApp.use('/', controller.router);
         });
 
